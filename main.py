@@ -1,34 +1,37 @@
 import pygame
 
-
-def init():
-    pass
-
-def update():
-    pass
-
-def draw():
-    pass
-
 class Game:
     def __init__(self):
+        self._running = True
+        self._display_surf = None
+        self.size = self.weight, self.height = 640, 400
+ 
+    def on_init(self):
         pygame.init()
-        self.screen  = pygame.display.set_mode((1280, 720))
-        self.clock   = pygame.time.Clock()
-        self.running = True
-
-    def update(self):
+        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self._running = True
+ 
+    def on_event(self, event):
+        if event.type == pygame.QUIT:
+            self._running = False
+    def on_loop(self):
         pass
-
-    def draw(self):
+    def on_render(self):
         pass
-
+    def on_cleanup(self):
+        pygame.quit()
+ 
     def run(self):
-        while self.running:            
-            self.update()
-            self.draw()
-            self.clock.tick(60)
-
+        if self.on_init() == False:
+            self._running = False
+ 
+        while( self._running ):
+            for event in pygame.event.get():
+                self.on_event(event)
+            self.on_loop()
+            self.on_render()
+        self.on_cleanup()
+ 
 
 if __name__ == '__main__':
     game = Game()
